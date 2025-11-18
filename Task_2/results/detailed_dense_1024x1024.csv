@@ -1,0 +1,13 @@
+Matrix_Size,Algorithm,Run_Number,Execution_Time_s,Memory_Usage_KB
+1024,Basic,1,7.266614,8192
+1024,Basic,2,7.268001,8192
+1024,Basic,3,7.258063,8192
+1024,Loop_Unroll,1,7.161834,8192
+1024,Loop_Unroll,2,7.163570,8192
+1024,Loop_Unroll,3,7.164749,8192
+1024,Cache_Block,1,4.255584,8192
+1024,Cache_Block,2,4.254583,8192
+1024,Cache_Block,3,4.257299,8192
+1024,Strassen,1,0.486600,20808
+1024,Strassen,2,0.486675,20832
+1024,Strassen,3,0.485991,20828

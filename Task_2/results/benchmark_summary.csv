@@ -1,0 +1,16 @@
+Benchmark_Summary
+Timestamp,2025-11-16 15:01:52
+Matrix_Sizes,256x256 512x512 1024x1024 2048x2048
+Algorithms,Basic Loop_Unroll Cache_Block Strassen
+Runs_Per_Algorithm,3
+Sparse_Analysis,50%% 70%% 90%% 95%% sparsity levels
+Memory_Measurement,Real RSS from /proc/self/status
+Compiler_Flags,-O3 -march=native
+
+Files_Generated:
+dense_256x256.csv,Dense matrix results for 256x256
+dense_512x512.csv,Dense matrix results for 512x512
+dense_1024x1024.csv,Dense matrix results for 1024x1024
+dense_2048x2048.csv,Dense matrix results for 2048x2048
+sparse_results.csv,Sparse matrix analysis all sparsity levels
+detailed_sparse_results.csv,Individual run data for sparse analysis

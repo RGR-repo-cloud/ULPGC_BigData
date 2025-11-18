@@ -1,0 +1,5 @@
+Matrix_Size,Algorithm,Avg_Time_s,StdDev_Time_s,Min_Time_s,Max_Time_s,Avg_Memory_KB,StdDev_Memory_KB,Min_Memory_KB,Max_Memory_KB,Speedup
+512,Basic,0.782385,0.000307,0.782006,0.782758,2048,0,0,0,1.00
+512,Loop_Unroll,0.768468,0.003604,0.763507,0.771962,2048,0,0,0,1.02
+512,Cache_Block,0.529428,0.000042,0.529373,0.529474,2048,0,0,0,1.48
+512,Strassen,0.069331,0.000310,0.069006,0.069748,10752,0,0,0,11.28

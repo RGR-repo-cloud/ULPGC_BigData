@@ -1,0 +1,11 @@
+Maximum_Matrix_Size_Analysis
+Timestamp,2025-11-16 14:39:35
+Timeout_Seconds,1
+Step_Size,10
+Test_Range,800 to 5000
+
+Algorithm,Max_Matrix_Size,Max_Elements,Memory_Requirement_MB
+Basic,864,746496,17.09
+Loop_Unroll,864,746496,17.09
+Cache_Block,992,984064,22.52
+Strassen,864,746496,17.09
