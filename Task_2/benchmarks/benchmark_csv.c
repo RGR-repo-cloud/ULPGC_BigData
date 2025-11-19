@@ -76,11 +76,12 @@ void export_sparse_results_csv(const char* filename, int matrix_size, double spa
     if (!file) return;
     
     if (is_first_entry) {
-        fprintf(file, "Matrix_Size,Sparsity_Percent,Format,Avg_Time_s,StdDev_Time_s,Min_Time_s,Max_Time_s,Avg_Memory_KB,StdDev_Memory_KB,Min_Memory_KB,Max_Memory_KB,Storage_Elements,Speedup,Memory_Savings_Percent\n");
+        fprintf(file, "Matrix_Size,Sparsity_Percent,Format,Avg_Time_s,StdDev_Time_s,Min_Time_s,Max_Time_s,Avg_Memory_KB,StdDev_Memory_KB,Min_Memory_KB,Max_Memory_KB,Storage_Elements,Speedup,Runtime_Memory_Savings_Percent\n");
     }
     
     double speedup = (dense.avg_time > 0) ? dense.avg_time / sparse.avg_time : 1.0;
-    double memory_savings = ((double)(storage_dense - storage_sparse) / storage_dense) * 100.0;
+    // Calculate actual runtime memory savings (negative = CSR uses more memory)
+    double memory_savings = ((double)(dense.avg_memory - sparse.avg_memory) / dense.avg_memory) * 100.0;
     
     // Write dense and sparse results
     const PerformanceStats stats[] = {dense, sparse};

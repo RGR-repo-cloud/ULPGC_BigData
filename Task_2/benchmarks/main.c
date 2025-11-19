@@ -5,12 +5,12 @@
 void print_usage(const char* program_name) {
     printf("Usage: %s [option]\n", program_name);
     printf("Options:\n");
-    printf("  --help       Show this help\n");
-    printf("  --verify     Verify algorithm correctness\n");
-    printf("  --benchmark  Run performance benchmark (256, 512, 1024, 2048)\n");
-    printf("  --sparse     Sparse matrix analysis\n");
-    printf("  --maxsize    Test maximum matrix sizes for each algorithm\n");
-    printf("  (no args)    Run all tests\n");
+    printf("  --help, -h      Show this help\n");
+    printf("  --verify        Verify algorithm correctness\n");
+    printf("  --benchmark     Run performance benchmark (256, 512, 1024, 2048)\n");
+    printf("  --sparse, sparse Sparse matrix analysis\n");
+    printf("  --maxsize       Test maximum matrix sizes for each algorithm\n");
+    printf("  (no args)       Run all tests\n");
 }
 
 void verify_algorithms(void) {
@@ -147,7 +147,7 @@ int main(int argc, char* argv[]) {
         } else if (strcmp(argv[1], "--benchmark") == 0) {
             run_benchmark();
             return 0;
-        } else if (strcmp(argv[1], "--sparse") == 0) {
+        } else if (strcmp(argv[1], "--sparse") == 0 || strcmp(argv[1], "sparse") == 0) {
             run_sparse_benchmark();
             return 0;
         } else if (strcmp(argv[1], "--maxsize") == 0) {

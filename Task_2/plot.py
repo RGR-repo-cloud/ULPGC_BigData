@@ -169,21 +169,21 @@ def plot_sparse_speedup():
         print("⚠️  sparse_results.csv not found")
 
 def plot_sparse_memory_savings():
-    """Plot memory savings vs sparsity level"""
+    """Plot runtime memory savings vs sparsity level"""
     try:
         df = pd.read_csv('results/sparse_results.csv')
         sparse_data = df[df['Format'] == 'Sparse']
         
         sparsity = sparse_data['Sparsity_Percent'].values
-        memory_savings = sparse_data['Memory_Savings_Percent'].values
+        memory_savings = sparse_data['Runtime_Memory_Savings_Percent'].values
         
         plt.figure(figsize=(10, 6))
         colors = ['red' if x < 0 else 'green' for x in memory_savings]
         bars = plt.bar(sparsity, memory_savings, color=colors, alpha=0.7)
         
         plt.xlabel('Sparsity Level (%)')
-        plt.ylabel('Memory Savings (%)')
-        plt.title('Memory Savings vs Sparsity Level')
+        plt.ylabel('Runtime Memory Savings (%)')
+        plt.title('Runtime Memory Savings: CSR vs Dense Format')
         plt.axhline(y=0, color='black', linestyle='-', alpha=0.5)
         plt.grid(True, alpha=0.3)
         

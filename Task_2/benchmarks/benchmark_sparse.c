@@ -3,6 +3,7 @@
 #include <string.h>
 #include <malloc.h>
 #include <stdlib.h>
+#include <math.h>
 
 // Simple benchmark for sparse matrix multiplication
 PerformanceResult benchmark_sparse_algorithm(CSRMatrix* a, CSRMatrix* b, const char* name) {
@@ -108,7 +109,8 @@ void run_sparsity_analysis(int matrix_size, double min_sparsity __attribute__((u
         int storage_dense = matrix_size * matrix_size;
         int storage_sparse = a_sparse->nnz + b_sparse->nnz;
         double speedup = (dense_result.avg_time > 0) ? dense_result.avg_time / sparse_result.avg_time : 1.0;
-        double memory_savings = (double)(storage_dense - storage_sparse) / storage_dense * 100.0;
+        // Calculate actual runtime memory savings (negative = CSR uses more memory)
+        double memory_savings = (double)(dense_result.avg_memory - sparse_result.avg_memory) / dense_result.avg_memory * 100.0;
         
         // Export both statistical and detailed results
         export_sparse_results_csv("sparse_results.csv", matrix_size, sparsity * 100, 
@@ -116,8 +118,9 @@ void run_sparsity_analysis(int matrix_size, double min_sparsity __attribute__((u
         export_detailed_sparse_results_csv("sparse_results.csv", matrix_size, sparsity * 100,
                                           dense_results, sparse_results, num_runs, (i == 0));
         
-        printf("✓ %.0f%% sparse: %.1fx speedup, %.1f%% storage saved\n", 
-               sparsity * 100, speedup, memory_savings);
+        printf("✓ %.0f%% sparse: %.1fx speedup, %.1f%% runtime memory %s\n", 
+               sparsity * 100, speedup, fabs(memory_savings), 
+               memory_savings >= 0 ? "saved" : "overhead");
         
         // Cleanup
         free(dense_results);
