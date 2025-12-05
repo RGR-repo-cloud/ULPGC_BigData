@@ -1,0 +1,73 @@
+Algorithm,Matrix_Size,Memory_MB,Peak_Memory_MB,Threads,Test_Type
+Basic Sequential,128,0.661,0.793,1,comparison
+Vectorized (block size: 32),128,0.661,0.793,1,comparison
+Parallel (8 threads),128,1.501,1.801,8,comparison
+Basic Sequential,128,0.661,0.793,1,algorithm_comparison
+Vectorized (block size: 32),128,0.661,0.793,1,algorithm_comparison
+Parallel (8 threads),128,1.501,1.801,8,algorithm_comparison
+Basic Sequential,256,2.625,3.151,1,comparison
+Vectorized (block size: 32),256,2.602,3.122,1,comparison
+Parallel (8 threads),256,4.280,5.136,8,comparison
+Basic Sequential,256,2.625,3.151,1,algorithm_comparison
+Vectorized (block size: 32),256,2.602,3.122,1,algorithm_comparison
+Parallel (8 threads),256,4.280,5.136,8,algorithm_comparison
+Basic Sequential,512,8.739,10.487,1,comparison
+Vectorized (block size: 32),512,6.135,7.362,1,comparison
+Parallel (8 threads),512,10.793,12.952,8,comparison
+Basic Sequential,512,8.739,10.487,1,algorithm_comparison
+Vectorized (block size: 32),512,6.135,7.362,1,algorithm_comparison
+Parallel (8 threads),512,10.793,12.952,8,algorithm_comparison
+Basic Sequential,1024,16.604,19.925,1,comparison
+Vectorized (block size: 32),1024,16.099,19.319,1,comparison
+Parallel (8 threads),1024,17.221,20.665,8,comparison
+Basic Sequential,1024,16.604,19.925,1,algorithm_comparison
+Vectorized (block size: 32),1024,16.099,19.319,1,algorithm_comparison
+Parallel (8 threads),1024,17.221,20.665,8,algorithm_comparison
+Basic Sequential,128,0.674,0.808,1,comparison
+Parallel (8 threads),128,1.114,1.336,8,comparison
+Advanced Parallel (8 threads),128,1.193,1.431,8,comparison
+"Advanced Parallel (8 threads, semaphore:4)",128,1.969,2.363,8,comparison
+"Advanced Parallel (8 threads, streams)",128,0.756,0.907,8,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",128,0.680,0.816,8,comparison
+Basic Sequential,128,0.674,0.808,1,concurrency_mechanisms
+Parallel (8 threads),128,1.114,1.336,8,concurrency_mechanisms
+Advanced Parallel (8 threads),128,1.193,1.431,8,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",128,1.969,2.363,8,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",128,0.756,0.907,8,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",128,0.680,0.816,8,concurrency_mechanisms
+Basic Sequential,256,2.613,3.135,1,comparison
+Parallel (8 threads),256,3.433,4.119,8,comparison
+Advanced Parallel (8 threads),256,3.438,4.126,8,comparison
+"Advanced Parallel (8 threads, semaphore:4)",256,3.812,4.575,8,comparison
+"Advanced Parallel (8 threads, streams)",256,2.699,3.239,8,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",256,2.557,3.069,8,comparison
+Basic Sequential,256,2.613,3.135,1,concurrency_mechanisms
+Parallel (8 threads),256,3.433,4.119,8,concurrency_mechanisms
+Advanced Parallel (8 threads),256,3.438,4.126,8,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",256,3.812,4.575,8,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",256,2.699,3.239,8,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",256,2.557,3.069,8,concurrency_mechanisms
+Basic Sequential,512,6.151,7.382,1,comparison
+Parallel (8 threads),512,7.774,9.329,8,comparison
+Advanced Parallel (8 threads),512,10.538,12.646,8,comparison
+"Advanced Parallel (8 threads, semaphore:4)",512,7.593,9.111,8,comparison
+"Advanced Parallel (8 threads, streams)",512,10.213,12.255,8,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",512,10.259,12.311,8,comparison
+Basic Sequential,512,6.151,7.382,1,concurrency_mechanisms
+Parallel (8 threads),512,7.774,9.329,8,concurrency_mechanisms
+Advanced Parallel (8 threads),512,10.538,12.646,8,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",512,7.593,9.111,8,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",512,10.213,12.255,8,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",512,10.259,12.311,8,concurrency_mechanisms
+Basic Sequential,1024,21.958,26.349,1,comparison
+Parallel (8 threads),1024,22.440,26.928,8,comparison
+Advanced Parallel (8 threads),1024,26.521,31.825,8,comparison
+"Advanced Parallel (8 threads, semaphore:4)",1024,40.423,48.508,8,comparison
+"Advanced Parallel (8 threads, streams)",1024,24.267,29.120,8,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",1024,24.730,29.676,8,comparison
+Basic Sequential,1024,21.958,26.349,1,concurrency_mechanisms
+Parallel (8 threads),1024,22.440,26.928,8,concurrency_mechanisms
+Advanced Parallel (8 threads),1024,26.521,31.825,8,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",1024,40.423,48.508,8,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",1024,24.267,29.120,8,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",1024,24.730,29.676,8,concurrency_mechanisms

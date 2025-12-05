@@ -1,0 +1,23 @@
+Parameter_Type,Parameter_Value,Algorithm,Matrix_Size,Time_ms,Speedup,Threads,Memory_MB
+block size,16,Vectorized (block size: 16),512,59.882,1.000,1,8.194
+block size,32,Vectorized (block size: 32),512,55.348,1.082,1,10.341
+block size,64,Vectorized (block size: 64),512,60.359,0.992,1,8.320
+block size,128,Vectorized (block size: 128),512,63.213,0.947,1,6.158
+block size,256,Vectorized (block size: 256),512,66.154,0.905,1,8.198
+block size,512,Vectorized (block size: 512),512,73.042,0.820,1,6.180
+thread count,1,Parallel (1 threads),512,157.763,1.000,1,10.846
+thread count,2,Parallel (2 threads),512,85.906,1.836,2,9.034
+thread count,4,Parallel (4 threads),512,44.280,3.563,4,10.215
+thread count,6,Parallel (6 threads),512,31.971,4.935,6,7.890
+thread count,8,Parallel (8 threads),512,25.745,6.128,8,9.403
+semaphore permits,1,"Advanced Parallel (8 threads, semaphore:1)",512,167.004,1.000,8,9.860
+semaphore permits,2,"Advanced Parallel (8 threads, semaphore:2)",512,131.699,1.268,8,9.789
+semaphore permits,4,"Advanced Parallel (8 threads, semaphore:4)",512,69.010,2.420,8,8.475
+semaphore permits,8,"Advanced Parallel (8 threads, semaphore:8)",512,74.802,2.233,8,7.518
+semaphore permits,16,"Advanced Parallel (8 threads, semaphore:16)",512,89.559,1.865,8,10.020
+Fork-Join threshold,32,"Fork-Join (threshold: 32, parallelism: 8)",512,148.897,1.000,8,8.145
+Fork-Join threshold,32,"Fork-Join (threshold: 32, parallelism: 8)",512,148.206,1.005,8,8.293
+Fork-Join threshold,64,"Fork-Join (threshold: 64, parallelism: 8)",512,146.815,1.014,8,8.182
+Fork-Join threshold,128,"Fork-Join (threshold: 128, parallelism: 8)",512,148.172,1.005,8,8.247
+Fork-Join threshold,256,"Fork-Join (threshold: 256, parallelism: 8)",512,147.799,1.007,8,8.218
+Fork-Join threshold,512,"Fork-Join (threshold: 512, parallelism: 8)",512,147.809,1.007,8,6.141

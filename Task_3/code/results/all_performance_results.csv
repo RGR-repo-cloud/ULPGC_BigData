@@ -1,0 +1,73 @@
+Algorithm,Matrix_Size,Time_ms,Time_ns,Speedup,Threads,Memory_MB,Test_Type
+Basic Sequential,128,1.967,1966630,1.000,1,0.661,comparison
+Vectorized (block size: 32),128,0.806,805763,2.441,1,0.661,comparison
+Parallel (8 threads),128,1.739,1738750,1.131,8,1.501,comparison
+Basic Sequential,128,1.967,1966630,1.000,1,0.661,algorithm_comparison
+Vectorized (block size: 32),128,0.806,805763,2.441,1,0.661,algorithm_comparison
+Parallel (8 threads),128,1.739,1738750,1.131,8,1.501,algorithm_comparison
+Basic Sequential,256,18.265,18265426,1.000,1,2.625,comparison
+Vectorized (block size: 32),256,6.437,6436943,2.838,1,2.602,comparison
+Parallel (8 threads),256,3.261,3261382,5.601,8,4.280,comparison
+Basic Sequential,256,18.265,18265426,1.000,1,2.625,algorithm_comparison
+Vectorized (block size: 32),256,6.437,6436943,2.838,1,2.602,algorithm_comparison
+Parallel (8 threads),256,3.261,3261382,5.601,8,4.280,algorithm_comparison
+Basic Sequential,512,162.453,162453292,1.000,1,8.739,comparison
+Vectorized (block size: 32),512,56.865,56865298,2.857,1,6.135,comparison
+Parallel (8 threads),512,26.206,26206425,6.199,8,10.793,comparison
+Basic Sequential,512,162.453,162453292,1.000,1,8.739,algorithm_comparison
+Vectorized (block size: 32),512,56.865,56865298,2.857,1,6.135,algorithm_comparison
+Parallel (8 threads),512,26.206,26206425,6.199,8,10.793,algorithm_comparison
+Basic Sequential,1024,3769.256,3769255875,1.000,1,16.604,comparison
+Vectorized (block size: 32),1024,466.438,466438191,8.081,1,16.099,comparison
+Parallel (8 threads),1024,379.754,379754356,9.926,8,17.221,comparison
+Basic Sequential,1024,3769.256,3769255875,1.000,1,16.604,algorithm_comparison
+Vectorized (block size: 32),1024,466.438,466438191,8.081,1,16.099,algorithm_comparison
+Parallel (8 threads),1024,379.754,379754356,9.926,8,17.221,algorithm_comparison
+Basic Sequential,128,5.398,5397783,1.000,1,0.674,comparison
+Parallel (8 threads),128,1.058,1057598,5.104,8,1.114,comparison
+Advanced Parallel (8 threads),128,2.292,2291672,2.355,8,1.193,comparison
+"Advanced Parallel (8 threads, semaphore:4)",128,2.579,2579351,2.093,8,1.969,comparison
+"Advanced Parallel (8 threads, streams)",128,0.632,632206,8.538,8,0.756,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",128,1.633,1633303,3.305,8,0.680,comparison
+Basic Sequential,128,5.398,5397783,1.000,1,0.674,concurrency_mechanisms
+Parallel (8 threads),128,1.058,1057598,5.104,8,1.114,concurrency_mechanisms
+Advanced Parallel (8 threads),128,2.292,2291672,2.355,8,1.193,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",128,2.579,2579351,2.093,8,1.969,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",128,0.632,632206,8.538,8,0.756,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",128,1.633,1633303,3.305,8,0.680,concurrency_mechanisms
+Basic Sequential,256,15.757,15756811,1.000,1,2.613,comparison
+Parallel (8 threads),256,3.291,3290548,4.789,8,3.433,comparison
+Advanced Parallel (8 threads),256,13.891,13891452,1.134,8,3.438,comparison
+"Advanced Parallel (8 threads, semaphore:4)",256,15.216,15216139,1.036,8,3.812,comparison
+"Advanced Parallel (8 threads, streams)",256,3.605,3605171,4.371,8,2.699,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",256,14.621,14620780,1.078,8,2.557,comparison
+Basic Sequential,256,15.757,15756811,1.000,1,2.613,concurrency_mechanisms
+Parallel (8 threads),256,3.291,3290548,4.789,8,3.433,concurrency_mechanisms
+Advanced Parallel (8 threads),256,13.891,13891452,1.134,8,3.438,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",256,15.216,15216139,1.036,8,3.812,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",256,3.605,3605171,4.371,8,2.699,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",256,14.621,14620780,1.078,8,2.557,concurrency_mechanisms
+Basic Sequential,512,156.373,156372508,1.000,1,6.151,comparison
+Parallel (8 threads),512,26.378,26378108,5.928,8,7.774,comparison
+Advanced Parallel (8 threads),512,80.808,80808152,1.935,8,10.538,comparison
+"Advanced Parallel (8 threads, semaphore:4)",512,75.529,75529323,2.070,8,7.593,comparison
+"Advanced Parallel (8 threads, streams)",512,24.943,24943351,6.269,8,10.213,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",512,146.131,146130786,1.070,8,10.259,comparison
+Basic Sequential,512,156.373,156372508,1.000,1,6.151,concurrency_mechanisms
+Parallel (8 threads),512,26.378,26378108,5.928,8,7.774,concurrency_mechanisms
+Advanced Parallel (8 threads),512,80.808,80808152,1.935,8,10.538,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",512,75.529,75529323,2.070,8,7.593,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",512,24.943,24943351,6.269,8,10.213,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",512,146.131,146130786,1.070,8,10.259,concurrency_mechanisms
+Basic Sequential,1024,3994.137,3994137474,1.000,1,21.958,comparison
+Parallel (8 threads),1024,437.838,437838029,9.122,8,22.440,comparison
+Advanced Parallel (8 threads),1024,382.824,382824054,10.433,8,26.521,comparison
+"Advanced Parallel (8 threads, semaphore:4)",1024,784.921,784921263,5.089,8,40.423,comparison
+"Advanced Parallel (8 threads, streams)",1024,369.716,369715679,10.803,8,24.267,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",1024,3177.350,3177349769,1.257,8,24.730,comparison
+Basic Sequential,1024,3994.137,3994137474,1.000,1,21.958,concurrency_mechanisms
+Parallel (8 threads),1024,437.838,437838029,9.122,8,22.440,concurrency_mechanisms
+Advanced Parallel (8 threads),1024,382.824,382824054,10.433,8,26.521,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",1024,784.921,784921263,5.089,8,40.423,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",1024,369.716,369715679,10.803,8,24.267,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",1024,3177.350,3177349769,1.257,8,24.730,concurrency_mechanisms

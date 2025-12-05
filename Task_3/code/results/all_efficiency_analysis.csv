@@ -1,0 +1,49 @@
+Algorithm,Matrix_Size,Threads,Speedup,Efficiency,Speedup_Per_Thread,Rating,Test_Type
+Parallel (8 threads),128,8,1.131,0.141,0.141,POOR,comparison
+Parallel (8 threads),128,8,1.131,0.141,0.141,POOR,algorithm_comparison
+Parallel (8 threads),256,8,5.601,0.700,0.700,GOOD,comparison
+Parallel (8 threads),256,8,5.601,0.700,0.700,GOOD,algorithm_comparison
+Parallel (8 threads),512,8,6.199,0.775,0.775,GOOD,comparison
+Parallel (8 threads),512,8,6.199,0.775,0.775,GOOD,algorithm_comparison
+Parallel (8 threads),1024,8,9.926,1.241,1.241,EXCELLENT,comparison
+Parallel (8 threads),1024,8,9.926,1.241,1.241,EXCELLENT,algorithm_comparison
+Parallel (8 threads),128,8,5.104,0.638,0.638,FAIR,comparison
+Advanced Parallel (8 threads),128,8,2.355,0.294,0.294,POOR,comparison
+"Advanced Parallel (8 threads, semaphore:4)",128,8,2.093,0.262,0.262,POOR,comparison
+"Advanced Parallel (8 threads, streams)",128,8,8.538,1.067,1.067,EXCELLENT,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",128,8,3.305,0.413,0.413,POOR,comparison
+Parallel (8 threads),128,8,5.104,0.638,0.638,FAIR,concurrency_mechanisms
+Advanced Parallel (8 threads),128,8,2.355,0.294,0.294,POOR,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",128,8,2.093,0.262,0.262,POOR,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",128,8,8.538,1.067,1.067,EXCELLENT,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",128,8,3.305,0.413,0.413,POOR,concurrency_mechanisms
+Parallel (8 threads),256,8,4.789,0.599,0.599,FAIR,comparison
+Advanced Parallel (8 threads),256,8,1.134,0.142,0.142,POOR,comparison
+"Advanced Parallel (8 threads, semaphore:4)",256,8,1.036,0.129,0.129,POOR,comparison
+"Advanced Parallel (8 threads, streams)",256,8,4.371,0.546,0.546,FAIR,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",256,8,1.078,0.135,0.135,POOR,comparison
+Parallel (8 threads),256,8,4.789,0.599,0.599,FAIR,concurrency_mechanisms
+Advanced Parallel (8 threads),256,8,1.134,0.142,0.142,POOR,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",256,8,1.036,0.129,0.129,POOR,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",256,8,4.371,0.546,0.546,FAIR,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",256,8,1.078,0.135,0.135,POOR,concurrency_mechanisms
+Parallel (8 threads),512,8,5.928,0.741,0.741,GOOD,comparison
+Advanced Parallel (8 threads),512,8,1.935,0.242,0.242,POOR,comparison
+"Advanced Parallel (8 threads, semaphore:4)",512,8,2.070,0.259,0.259,POOR,comparison
+"Advanced Parallel (8 threads, streams)",512,8,6.269,0.784,0.784,GOOD,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",512,8,1.070,0.134,0.134,POOR,comparison
+Parallel (8 threads),512,8,5.928,0.741,0.741,GOOD,concurrency_mechanisms
+Advanced Parallel (8 threads),512,8,1.935,0.242,0.242,POOR,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",512,8,2.070,0.259,0.259,POOR,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",512,8,6.269,0.784,0.784,GOOD,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",512,8,1.070,0.134,0.134,POOR,concurrency_mechanisms
+Parallel (8 threads),1024,8,9.122,1.140,1.140,EXCELLENT,comparison
+Advanced Parallel (8 threads),1024,8,10.433,1.304,1.304,EXCELLENT,comparison
+"Advanced Parallel (8 threads, semaphore:4)",1024,8,5.089,0.636,0.636,FAIR,comparison
+"Advanced Parallel (8 threads, streams)",1024,8,10.803,1.350,1.350,EXCELLENT,comparison
+"Fork-Join (threshold: 64, parallelism: 8)",1024,8,1.257,0.157,0.157,POOR,comparison
+Parallel (8 threads),1024,8,9.122,1.140,1.140,EXCELLENT,concurrency_mechanisms
+Advanced Parallel (8 threads),1024,8,10.433,1.304,1.304,EXCELLENT,concurrency_mechanisms
+"Advanced Parallel (8 threads, semaphore:4)",1024,8,5.089,0.636,0.636,FAIR,concurrency_mechanisms
+"Advanced Parallel (8 threads, streams)",1024,8,10.803,1.350,1.350,EXCELLENT,concurrency_mechanisms
+"Fork-Join (threshold: 64, parallelism: 8)",1024,8,1.257,0.157,0.157,POOR,concurrency_mechanisms

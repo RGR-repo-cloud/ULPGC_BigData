@@ -1,0 +1,22 @@
+Metric,Value,Unit
+System_Info,"Complete hyperparameter optimization and comparison benchmark",text
+Timestamp,"2025-12-05T17:43:30.540651577",datetime
+Available_Processors,8,count
+Max_Memory_MB,3804,MB
+Max_Speedup,10.803,ratio
+Average_Speedup,3.746,ratio
+Min_Execution_Time_ms,0.632,ms
+Max_Execution_Time_ms,3994.137,ms
+Total_Performance_Test_Cases,72,count
+Best_Algorithm,"Advanced Parallel (8 threads, streams)",text
+Best_Algorithm_Time_ms,0.632,ms
+Max_Parallel_Efficiency,1.350,ratio
+Average_Parallel_Efficiency,0.576,ratio
+Max_Speedup_Per_Thread,1.350,ratio
+Excellent_Efficiency_Cases,10,count
+Good_Efficiency_Cases,8,count
+Total_Efficiency_Test_Cases,48,count
+Max_Memory_Usage_MB,40.42,MB
+Average_Memory_Usage_MB,9.05,MB
+Max_Threads_Used,8,count
+Total_Resource_Test_Cases,72,count
