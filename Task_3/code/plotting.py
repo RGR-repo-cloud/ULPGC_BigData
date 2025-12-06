@@ -1228,6 +1228,141 @@ class EnhancedBenchmarkPlotter:
         print("✅ Advanced algorithms combined scaling analysis generated")
         print("✅ All advanced algorithm scaling analyses generated")
 
+    def plot_advanced_algorithm_performance_comparison(self):
+        """Generate performance comparison plots for advanced algorithms across different matrix sizes."""
+        performance_df = self.load_data('all_performance_results.csv')
+        if performance_df is None:
+            print("⚠️ No performance data available for advanced algorithm performance comparison")
+            return
+        
+        # Filter for comparison data only to avoid duplicates
+        comparison_data = performance_df[performance_df['Test_Type'] == 'comparison']
+        if len(comparison_data) == 0:
+            print("⚠️ No comparison data found for advanced algorithm performance comparison")
+            return
+        
+        # Define advanced algorithms mapping
+        advanced_algorithms = {
+            'Basic Sequential': 'Basic Sequential',
+            'Parallel (8 threads)': 'Parallel (8 threads)',
+            'Advanced Parallel (8 threads)': 'Advanced Parallel (8 threads)',
+            'Advanced Parallel (8 threads, semaphore:4)': 'Advanced + Semaphore',
+            'Advanced Parallel (8 threads, streams)': 'Parallel Streams',
+            'Fork-Join (threshold: 64, parallelism: 8)': 'Fork-Join'
+        }
+        
+        # Filter data for advanced algorithms and remove duplicates
+        advanced_data = []
+        seen_combinations = set()
+        
+        for index, row in comparison_data.iterrows():
+            algorithm = row['Algorithm']
+            clean_alg = algorithm.strip('"')
+            if clean_alg in advanced_algorithms:
+                unique_key = (clean_alg, row['Matrix_Size'])
+                if unique_key not in seen_combinations:
+                    row_copy = row.copy()
+                    row_copy['Algorithm_Clean'] = advanced_algorithms[clean_alg]
+                    advanced_data.append(row_copy)
+                    seen_combinations.add(unique_key)
+        
+        if not advanced_data:
+            print("⚠️ No advanced algorithm data found for performance comparison")
+            return
+            
+        advanced_df = pd.DataFrame(advanced_data)
+        matrix_sizes = sorted(advanced_df['Matrix_Size'].unique())
+        
+        # Performance directory
+        performance_dir = self.output_dir / 'performance'
+        performance_dir.mkdir(exist_ok=True)
+        
+        # Colors for algorithms
+        colors = {
+            'Basic Sequential': '#1f77b4', 
+            'Parallel (8 threads)': '#ff7f0e', 
+            'Advanced Parallel (8 threads)': '#2ca02c',
+            'Advanced + Semaphore': '#d62728', 
+            'Parallel Streams': '#9467bd', 
+            'Fork-Join': '#8c564b'
+        }
+        
+        # Generate individual performance comparison plots for each matrix size
+        for size in matrix_sizes:
+            size_data = advanced_df[advanced_df['Matrix_Size'] == size]
+            
+            plt.figure(figsize=(14, 8))
+            
+            algorithms = []
+            times = []
+            colors_list = []
+            
+            for _, row in size_data.iterrows():
+                alg_name = row['Algorithm_Clean']
+                algorithms.append(alg_name)
+                times.append(row['Time_ms'])
+                colors_list.append(colors[alg_name])
+            
+            bars = plt.bar(range(len(algorithms)), times, color=colors_list, alpha=0.8, edgecolor='black', linewidth=1.5)
+            
+            # Add value labels on bars
+            for i, (bar, time) in enumerate(zip(bars, times)):
+                height = bar.get_height()
+                plt.text(bar.get_x() + bar.get_width()/2., height + height*0.01,
+                        f'{time:.1f}ms', ha='center', va='bottom', fontweight='bold', fontsize=10)
+            
+            plt.xlabel('Algorithm Implementation', fontsize=14, fontweight='bold')
+            plt.ylabel('Execution Time (ms)', fontsize=14, fontweight='bold')
+            plt.title(f'Advanced Algorithm Performance Comparison\nMatrix Size: {size}×{size}', 
+                     fontsize=16, fontweight='bold')
+            
+            plt.xticks(range(len(algorithms)), algorithms, rotation=45, ha='right')
+            plt.grid(True, alpha=0.3, axis='y')
+            
+            plt.tight_layout()
+            plt.savefig(performance_dir / f'advanced_algorithms_performance_{size}x{size}.png', 
+                       dpi=300, bbox_inches='tight')
+            plt.close()
+            
+            print(f"✅ Advanced algorithm performance comparison for {size}×{size} generated")
+        
+        # Generate summary comparison across all sizes
+        plt.figure(figsize=(16, 10))
+        
+        # Create subplots for each matrix size
+        for i, size in enumerate(matrix_sizes):
+            plt.subplot(2, 2, i + 1)
+            size_data = advanced_df[advanced_df['Matrix_Size'] == size]
+            
+            algorithms = []
+            times = []
+            colors_list = []
+            
+            for _, row in size_data.iterrows():
+                alg_name = row['Algorithm_Clean']
+                algorithms.append(alg_name)
+                times.append(row['Time_ms'])
+                colors_list.append(colors[alg_name])
+            
+            bars = plt.bar(range(len(algorithms)), times, color=colors_list, alpha=0.8)
+            
+            plt.title(f'{size}×{size}', fontsize=12, fontweight='bold')
+            plt.ylabel('Time (ms)', fontsize=10)
+            plt.xticks(range(len(algorithms)), 
+                      [alg.replace(' ', '\n') for alg in algorithms], 
+                      rotation=0, ha='center', fontsize=8)
+            plt.grid(True, alpha=0.3, axis='y')
+        
+        plt.suptitle('Advanced Algorithm Performance Comparison - All Matrix Sizes', 
+                    fontsize=16, fontweight='bold')
+        plt.tight_layout()
+        plt.savefig(performance_dir / 'advanced_algorithms_performance_summary.png', 
+                   dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        print("✅ Advanced algorithm performance comparison summary generated")
+        print("✅ All advanced algorithm performance comparisons generated")
+
     def plot_advanced_methods_analysis(self):
         """Complete methods analysis: Basic to Fork-Join - individual PNGs per matrix size."""
         df = self.load_data('all_performance_results.csv')
@@ -1474,6 +1609,7 @@ class EnhancedBenchmarkPlotter:
             ("Advanced Parallel Speedup Analysis", self.plot_advanced_parallel_speedup_analysis),
             ("Core Algorithm Scaling Analysis", self.plot_core_algorithm_scaling_analysis),
             ("Advanced Algorithm Scaling Analysis", self.plot_advanced_algorithm_scaling_analysis),
+            ("Advanced Algorithm Performance Comparison", self.plot_advanced_algorithm_performance_comparison),
             ("Hyperparameter Optimization", self.plot_hyperparameter_analysis)
         ]
         
