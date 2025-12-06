@@ -92,16 +92,20 @@ class EnhancedBenchmarkPlotter:
             return
         
         # Filter for the 3 core approaches: Basic, Vectorized, and Parallel
-        # Find available parallel algorithm dynamically
-        parallel_alg = self.find_parallel_algorithm(df)
+        # Core algorithms from the first experimental set (comparison and algorithm_comparison)
         core_algorithms = {
             'Basic': 'Basic Sequential',
             'Vectorized': 'Vectorized (block size: 32)', 
-            'Parallel': parallel_alg
+            'Parallel': 'Parallel (8 threads)'
         }
         
-        # Filter data for core algorithms only
-        filtered_df = df[df['Algorithm'].isin(core_algorithms.values())].copy()
+        # Filter data for core algorithms only from the first experimental run (exactly first 24 rows)
+        # The first experiment has Basic Sequential, Vectorized, and Parallel (8 threads)
+        # This includes both 'comparison' and 'algorithm_comparison' test types for the same data
+        core_experiment_data = df.iloc[:24].copy()  # Exactly first 24 rows
+        
+        # Filter for core algorithms only
+        filtered_df = core_experiment_data[core_experiment_data['Algorithm'].isin(core_algorithms.values())].copy()
         
         # Create mapping for cleaner labels
         filtered_df['Algorithm_Clean'] = filtered_df['Algorithm'].map({v: k for k, v in core_algorithms.items()})
@@ -338,16 +342,18 @@ class EnhancedBenchmarkPlotter:
         print("✅ All individual memory usage analyses generated")
         
         # Also create 3-algorithm memory plots (matching the performance analysis structure)
-        parallel_alg = self.find_parallel_algorithm(df)
         core_algorithms = {
             'Basic': 'Basic Sequential',
             'Vectorized': 'Vectorized (block size: 32)', 
-            'Parallel': parallel_alg
+            'Parallel': 'Parallel (8 threads)'
         }
         
-        # Filter for just the 3 core algorithms
+        # Filter for just the 3 core algorithms from the first experimental set (exactly first 24 rows)
+        core_experiment_data = df.iloc[:24].copy()
+        valid_core_data = core_experiment_data[core_experiment_data['Algorithm'].isin(core_algorithms.values())].copy()
+        
         core_filtered_df = []
-        for index, row in df.iterrows():
+        for index, row in valid_core_data.iterrows():
             algorithm = row['Algorithm']
             for clean_name, full_name in core_algorithms.items():
                 if algorithm == full_name:
@@ -569,16 +575,21 @@ class EnhancedBenchmarkPlotter:
         print("✅ All individual thread usage analyses generated")
         
         # Also create 3-algorithm thread plots (matching the performance analysis structure)
-        parallel_alg = self.find_parallel_algorithm(df)
         core_algorithms = {
             'Basic': 'Basic Sequential',
             'Vectorized': 'Vectorized (block size: 32)', 
-            'Parallel': parallel_alg
+            'Parallel': 'Parallel (8 threads)'
         }
         
-        # Filter for just the 3 core algorithms
+        # Filter for just the 3 core algorithms from the first experimental set
+        first_advanced_idx = df[df['Algorithm'].str.contains('Advanced', na=False)].index.min()
+        
+        # Use exactly first 24 rows for core algorithms
+        core_experiment_data = df.iloc[:24].copy()
+        valid_core_data = core_experiment_data[core_experiment_data['Algorithm'].isin(core_algorithms.values())].copy()
+        
         core_filtered_df = []
-        for index, row in df.iterrows():
+        for index, row in valid_core_data.iterrows():
             algorithm = row['Algorithm']
             for clean_name, full_name in core_algorithms.items():
                 if algorithm == full_name:
@@ -685,7 +696,45 @@ class EnhancedBenchmarkPlotter:
             print("⚠️ No comparison data found for parallel efficiency analysis")
             return
         
-        # Get unique matrix sizes
+        # Handle duplicates: keep only one representative value per algorithm per matrix size
+        filtered_data = []
+        matrix_sizes = sorted(comparison_data['Matrix_Size'].unique())
+        
+        for size in matrix_sizes:
+            size_data = comparison_data[comparison_data['Matrix_Size'] == size]
+            
+            # For each matrix size, keep only one entry per unique algorithm
+            # Group by algorithm and select the most representative entry
+            size_algorithms = {}
+            for index, row in size_data.iterrows():
+                algorithm = row['Algorithm']
+                
+                if algorithm not in size_algorithms:
+                    # First occurrence of this algorithm - keep it
+                    size_algorithms[algorithm] = row
+                else:
+                    # Duplicate found - apply selection logic
+                    stored_row = size_algorithms[algorithm]
+                    
+                    # Prefer entries from advanced experiment context (row >= 12) for consistency
+                    if row.name >= 12 and stored_row.name < 12:
+                        size_algorithms[algorithm] = row
+                    # If both are from same experiment context, keep the better performing one
+                    elif (row.name >= 12) == (stored_row.name >= 12):
+                        if row['Efficiency'] > stored_row['Efficiency']:
+                            size_algorithms[algorithm] = row
+                    # Otherwise keep the stored one (advanced experiment preference)
+            
+            # Add selected algorithms for this size (one per algorithm only)
+            for alg_row in size_algorithms.values():
+                filtered_data.append(alg_row)
+        
+        if not filtered_data:
+            print("⚠️ No efficiency data found after filtering")
+            return
+        
+        # Convert back to DataFrame
+        comparison_data = pd.DataFrame(filtered_data)
         matrix_sizes = sorted(comparison_data['Matrix_Size'].unique())
         
         # Efficiency directory
@@ -908,16 +957,16 @@ class EnhancedBenchmarkPlotter:
             print("⚠️ No comparison data found for core algorithm scaling analysis")
             return
         
-        # Define core algorithms dynamically
-        parallel_alg = self.find_parallel_algorithm_from_perf_data(comparison_data)
+        # Define core algorithms from the first experimental set
         core_algorithms = {
             'Basic Sequential': 'Basic',
             'Vectorized (block size: 32)': 'Vectorized',
-            parallel_alg: 'Parallel'
+            'Parallel (8 threads)': 'Parallel'
         }
         
-        # Filter for core algorithms only
-        core_data = comparison_data[comparison_data['Algorithm'].isin(core_algorithms.keys())]
+        # Filter for core algorithms only from the first experimental set (exactly first 24 rows)
+        core_experiment_data = comparison_data.iloc[:24].copy()
+        core_data = core_experiment_data[core_experiment_data['Algorithm'].isin(core_algorithms.keys())].copy()
         
         # Remove duplicates and add clean names
         core_data = core_data.drop_duplicates(subset=['Algorithm', 'Matrix_Size'], keep='first')
@@ -1066,7 +1115,7 @@ class EnhancedBenchmarkPlotter:
             print("⚠️ No comparison data found for advanced algorithm scaling analysis")
             return
         
-        # Define advanced algorithms mapping
+        # Define advanced algorithms mapping (including baselines for comparison)
         advanced_algorithms = {
             'Basic Sequential': 'Basic',
             'Parallel (8 threads)': 'Parallel',
@@ -1076,24 +1125,45 @@ class EnhancedBenchmarkPlotter:
             'Fork-Join (threshold: 64, parallelism: 8)': 'Fork-Join'
         }
         
-        # Filter data for advanced algorithms and remove duplicates
+        # Handle mixed data: for sizes 128/256 use all comparison data, for 512/1024 use rows 25+
         advanced_data = []
-        seen_combinations = set()
         
-        for index, row in comparison_data.iterrows():
-            algorithm = row['Algorithm']
-            # Handle quoted algorithm names
-            clean_alg = algorithm.strip('"')
-            if clean_alg in advanced_algorithms:
-                # Create a unique key for algorithm + matrix size combination
-                unique_key = (clean_alg, row['Matrix_Size'])
-                
-                # Only add if we haven't seen this combination before
-                if unique_key not in seen_combinations:
-                    row_copy = row.copy()
-                    row_copy['Algorithm_Clean'] = advanced_algorithms[clean_alg]
-                    advanced_data.append(row_copy)
-                    seen_combinations.add(unique_key)
+        # For each matrix size, determine the correct data source
+        matrix_sizes = sorted(comparison_data['Matrix_Size'].unique())
+        
+        for size in matrix_sizes:
+            if size in [128, 256]:
+                # For 128 and 256, advanced algorithms are mixed in first 24 rows
+                size_data = comparison_data[comparison_data['Matrix_Size'] == size]
+            else:
+                # For 512 and 1024, advanced algorithms are in rows 25+
+                size_data = comparison_data.iloc[24:]
+                size_data = size_data[size_data['Matrix_Size'] == size]
+            
+            # Collect all matching algorithms for this size
+            size_algorithms = {}
+            for index, row in size_data.iterrows():
+                algorithm = row['Algorithm']
+                clean_alg = algorithm.strip('"')
+                if clean_alg in advanced_algorithms:
+                    alg_clean_name = advanced_algorithms[clean_alg]
+                    # For sizes 128/256 with duplicates, prefer Advanced experiment entries (row >= 24)
+                    if size in [128, 256] and alg_clean_name in ['Basic', 'Parallel']:
+                        # For baseline algorithms in mixed data, prefer Advanced experiment
+                        if alg_clean_name not in size_algorithms or row.name >= 24:
+                            row_copy = row.copy()
+                            row_copy['Algorithm_Clean'] = alg_clean_name
+                            size_algorithms[alg_clean_name] = row_copy
+                    else:
+                        # For truly advanced algorithms or non-duplicate cases, take first found
+                        if alg_clean_name not in size_algorithms:
+                            row_copy = row.copy()
+                            row_copy['Algorithm_Clean'] = alg_clean_name
+                            size_algorithms[alg_clean_name] = row_copy
+            
+            # Add the selected version of each algorithm for this size
+            for alg_row in size_algorithms.values():
+                advanced_data.append(alg_row)
         
         if not advanced_data:
             print("⚠️ No advanced algorithm data found for scaling analysis")
@@ -1241,7 +1311,7 @@ class EnhancedBenchmarkPlotter:
             print("⚠️ No comparison data found for advanced algorithm performance comparison")
             return
         
-        # Define advanced algorithms mapping
+        # Define advanced algorithms mapping (including baselines for comparison)
         advanced_algorithms = {
             'Basic Sequential': 'Basic Sequential',
             'Parallel (8 threads)': 'Parallel (8 threads)',
@@ -1251,20 +1321,45 @@ class EnhancedBenchmarkPlotter:
             'Fork-Join (threshold: 64, parallelism: 8)': 'Fork-Join'
         }
         
-        # Filter data for advanced algorithms and remove duplicates
+        # Handle mixed data: for sizes 128/256 use all comparison data, for 512/1024 use rows 25+
         advanced_data = []
-        seen_combinations = set()
         
-        for index, row in comparison_data.iterrows():
-            algorithm = row['Algorithm']
-            clean_alg = algorithm.strip('"')
-            if clean_alg in advanced_algorithms:
-                unique_key = (clean_alg, row['Matrix_Size'])
-                if unique_key not in seen_combinations:
-                    row_copy = row.copy()
-                    row_copy['Algorithm_Clean'] = advanced_algorithms[clean_alg]
-                    advanced_data.append(row_copy)
-                    seen_combinations.add(unique_key)
+        # For each matrix size, determine the correct data source
+        matrix_sizes = sorted(comparison_data['Matrix_Size'].unique())
+        
+        for size in matrix_sizes:
+            if size in [128, 256]:
+                # For 128 and 256, advanced algorithms are mixed in first 24 rows
+                size_data = comparison_data[comparison_data['Matrix_Size'] == size]
+            else:
+                # For 512 and 1024, advanced algorithms are in rows 25+
+                size_data = comparison_data.iloc[24:]
+                size_data = size_data[size_data['Matrix_Size'] == size]
+            
+            # Collect all matching algorithms for this size
+            size_algorithms = {}
+            for index, row in size_data.iterrows():
+                algorithm = row['Algorithm']
+                clean_alg = algorithm.strip('"')
+                if clean_alg in advanced_algorithms:
+                    alg_clean_name = advanced_algorithms[clean_alg]
+                    # For sizes 128/256 with duplicates, prefer Advanced experiment entries (row >= 24)
+                    if size in [128, 256] and alg_clean_name in ['Basic Sequential', 'Parallel (8 threads)']:
+                        # For baseline algorithms in mixed data, prefer Advanced experiment
+                        if alg_clean_name not in size_algorithms or row.name >= 24:
+                            row_copy = row.copy()
+                            row_copy['Algorithm_Clean'] = alg_clean_name
+                            size_algorithms[alg_clean_name] = row_copy
+                    else:
+                        # For truly advanced algorithms or non-duplicate cases, take first found
+                        if alg_clean_name not in size_algorithms:
+                            row_copy = row.copy()
+                            row_copy['Algorithm_Clean'] = alg_clean_name
+                            size_algorithms[alg_clean_name] = row_copy
+            
+            # Add the selected version of each algorithm for this size
+            for alg_row in size_algorithms.values():
+                advanced_data.append(alg_row)
         
         if not advanced_data:
             print("⚠️ No advanced algorithm data found for performance comparison")
@@ -1362,6 +1457,131 @@ class EnhancedBenchmarkPlotter:
         
         print("✅ Advanced algorithm performance comparison summary generated")
         print("✅ All advanced algorithm performance comparisons generated")
+
+    def plot_advanced_algorithm_memory_comparison(self):
+        """Generate memory usage comparison plots for advanced algorithms across different matrix sizes."""
+        performance_df = self.load_data('all_performance_results.csv')
+        if performance_df is None:
+            print("⚠️ No performance data available for advanced algorithm memory comparison")
+            return
+        
+        # Filter for comparison data only to avoid duplicates
+        comparison_data = performance_df[performance_df['Test_Type'] == 'comparison']
+        if len(comparison_data) == 0:
+            print("⚠️ No comparison data found for advanced algorithm memory comparison")
+            return
+        
+        # Define advanced algorithms mapping (including baselines for comparison)
+        advanced_algorithms = {
+            'Basic Sequential': 'Basic Sequential',
+            'Parallel (8 threads)': 'Parallel (8 threads)',
+            'Advanced Parallel (8 threads)': 'Advanced Parallel (8 threads)',
+            'Advanced Parallel (8 threads, semaphore:4)': 'Advanced + Semaphore',
+            'Advanced Parallel (8 threads, streams)': 'Parallel Streams',
+            'Fork-Join (threshold: 64, parallelism: 8)': 'Fork-Join'
+        }
+        
+        # Handle mixed data: for sizes 128/256 use all comparison data, for 512/1024 use rows 25+
+        advanced_data = []
+        
+        # For each matrix size, determine the correct data source
+        matrix_sizes = sorted(comparison_data['Matrix_Size'].unique())
+        
+        for size in matrix_sizes:
+            if size in [128, 256]:
+                # For 128 and 256, advanced algorithms are mixed in first 24 rows
+                size_data = comparison_data[comparison_data['Matrix_Size'] == size]
+            else:
+                # For 512 and 1024, advanced algorithms are in rows 25+
+                size_data = comparison_data.iloc[24:]
+                size_data = size_data[size_data['Matrix_Size'] == size]
+            
+            # Collect all matching algorithms for this size
+            size_algorithms = {}
+            for index, row in size_data.iterrows():
+                algorithm = row['Algorithm']
+                clean_alg = algorithm.strip('"')
+                if clean_alg in advanced_algorithms:
+                    alg_clean_name = advanced_algorithms[clean_alg]
+                    # For sizes 128/256 with duplicates, prefer Advanced experiment entries (row >= 24)
+                    if size in [128, 256] and alg_clean_name in ['Basic Sequential', 'Parallel (8 threads)']:
+                        # For baseline algorithms in mixed data, prefer Advanced experiment
+                        if alg_clean_name not in size_algorithms or row.name >= 24:
+                            row_copy = row.copy()
+                            row_copy['Algorithm_Clean'] = alg_clean_name
+                            size_algorithms[alg_clean_name] = row_copy
+                    else:
+                        # For truly advanced algorithms or non-duplicate cases, take first found
+                        if alg_clean_name not in size_algorithms:
+                            row_copy = row.copy()
+                            row_copy['Algorithm_Clean'] = alg_clean_name
+                            size_algorithms[alg_clean_name] = row_copy
+            
+            # Add the selected version of each algorithm for this size
+            for alg_row in size_algorithms.values():
+                advanced_data.append(alg_row)
+        
+        if not advanced_data:
+            print("⚠️ No advanced algorithm data found for memory comparison")
+            return
+            
+        advanced_df = pd.DataFrame(advanced_data)
+        matrix_sizes = sorted(advanced_df['Matrix_Size'].unique())
+        
+        # Memory directory
+        memory_dir = self.output_dir / 'performance'
+        memory_dir.mkdir(exist_ok=True)
+        
+        # Colors for algorithms
+        colors = {
+            'Basic Sequential': '#1f77b4', 
+            'Parallel (8 threads)': '#ff7f0e', 
+            'Advanced Parallel (8 threads)': '#2ca02c',
+            'Advanced + Semaphore': '#d62728', 
+            'Parallel Streams': '#9467bd', 
+            'Fork-Join': '#8c564b'
+        }
+        
+        # Generate individual memory comparison plots for each matrix size
+        for size in matrix_sizes:
+            size_data = advanced_df[advanced_df['Matrix_Size'] == size]
+            
+            plt.figure(figsize=(14, 8))
+            
+            algorithms = []
+            memories = []
+            colors_list = []
+            
+            for _, row in size_data.iterrows():
+                alg_name = row['Algorithm_Clean']
+                algorithms.append(alg_name)
+                memories.append(row['Memory_MB'])
+                colors_list.append(colors[alg_name])
+            
+            bars = plt.bar(range(len(algorithms)), memories, color=colors_list, alpha=0.8, edgecolor='black', linewidth=1.5)
+            
+            # Add value labels on bars
+            for i, (bar, memory) in enumerate(zip(bars, memories)):
+                height = bar.get_height()
+                plt.text(bar.get_x() + bar.get_width()/2., height + height*0.01,
+                        f'{memory:.1f}MB', ha='center', va='bottom', fontweight='bold', fontsize=10)
+            
+            plt.xlabel('Algorithm Implementation', fontsize=14, fontweight='bold')
+            plt.ylabel('Memory Usage (MB)', fontsize=14, fontweight='bold')
+            plt.title(f'Advanced Algorithm Memory Usage Comparison\nMatrix Size: {size}×{size}', 
+                     fontsize=16, fontweight='bold')
+            
+            plt.xticks(range(len(algorithms)), algorithms, rotation=45, ha='right')
+            plt.grid(True, alpha=0.3, axis='y')
+            
+            plt.tight_layout()
+            plt.savefig(memory_dir / f'advanced_algorithms_memory_{size}x{size}.png', 
+                       dpi=300, bbox_inches='tight')
+            plt.close()
+            
+            print(f"✅ Advanced algorithm memory comparison for {size}×{size} generated")
+        
+        print("✅ All advanced algorithm memory comparisons generated")
 
     def plot_advanced_methods_analysis(self):
         """Complete methods analysis: Basic to Fork-Join - individual PNGs per matrix size."""
@@ -1610,6 +1830,7 @@ class EnhancedBenchmarkPlotter:
             ("Core Algorithm Scaling Analysis", self.plot_core_algorithm_scaling_analysis),
             ("Advanced Algorithm Scaling Analysis", self.plot_advanced_algorithm_scaling_analysis),
             ("Advanced Algorithm Performance Comparison", self.plot_advanced_algorithm_performance_comparison),
+            ("Advanced Algorithm Memory Comparison", self.plot_advanced_algorithm_memory_comparison),
             ("Hyperparameter Optimization", self.plot_hyperparameter_analysis)
         ]
         
